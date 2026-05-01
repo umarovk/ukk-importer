@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "UKK Nilai Importer",
+  "version": "1.0",
+  "description": "Import nilai UKK siswa dari file CSV ke sistem eraport",
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "host_permissions": ["https://eraport.smkcokrowanadadi.sch.id/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "UKK Nilai Importer"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://eraport.smkcokrowanadadi.sch.id/input_nilai_ukk*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://eraport.smkcokrowanadadi.sch.id/input_nilai_ukk*"],
+      "js": ["page_bridge.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
