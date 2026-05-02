@@ -1,4 +1,4 @@
-// State: array of { nisn, nama, nilai, penguji }
+// State: array of { nisn, nama, nilai, penguji, nosertif }
 let students = [];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -115,6 +115,17 @@ function fillValuesInPage(data) {
       }
     }
 
+    // Isi no sertifikat
+    if (item.nosertif && item.nosertif.trim()) {
+      const sertifInp = document.querySelector('input[name="no_sertif' + idx + '"]');
+      if (sertifInp) {
+        sertifInp.value = item.nosertif;
+        sertifInp.dispatchEvent(new Event('keyup', { bubbles: true }));
+        sertifInp.dispatchEvent(new Event('change', { bubbles: true }));
+        changed = true;
+      }
+    }
+
     if (changed) filled++;
   });
 
@@ -130,6 +141,8 @@ function resetFormInPage() {
     const inp = document.querySelector('input[name="nilai' + idx + '"]');
     if (inp) inp.value = '';
     $('select[name="ptkku' + idx + '"]').val('').trigger('change');
+    const sertifInp = document.querySelector('input[name="no_sertif' + idx + '"]');
+    if (sertifInp) sertifInp.value = '';
     count++;
   });
   return { count };
@@ -155,6 +168,11 @@ function renderTable() {
       <td class="col-penguji">
         <input class="cell-input penguji-input ${s.penguji ? 'has-value' : ''}"
                type="text" data-idx="${i}" value="${escHtml(s.penguji)}"
+               placeholder="—" autocomplete="off">
+      </td>
+      <td class="col-nosertif">
+        <input class="cell-input nosertif-input ${s.nosertif ? 'has-value' : ''}"
+               type="text" data-idx="${i}" value="${escHtml(s.nosertif)}"
                placeholder="—" autocomplete="off">
       </td>
     `;
@@ -211,6 +229,10 @@ function attachInputHandlers() {
     input.addEventListener('input', () => syncFromInput(input, 'penguji'));
     input.addEventListener('paste', e => handlePaste(e, '.penguji-input', 'penguji'));
   });
+  document.querySelectorAll('.nosertif-input').forEach(input => {
+    input.addEventListener('input', () => syncFromInput(input, 'nosertif'));
+    input.addEventListener('paste', e => handlePaste(e, '.nosertif-input', 'nosertif'));
+  });
 }
 
 function syncFromInput(input, field) {
@@ -266,7 +288,7 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
     return;
   }
 
-  students = res.students.map(s => ({ nisn: s.nisn, nama: s.nama, nilai: '', penguji: '' }));
+  students = res.students.map(s => ({ nisn: s.nisn, nama: s.nama, nilai: '', penguji: '', nosertif: '' }));
   renderTable();
   hideStatus();
 });
@@ -304,10 +326,13 @@ document.getElementById('btnIsiForm').addEventListener('click', async () => {
   document.querySelectorAll('.penguji-input').forEach(inp => {
     students[inp.dataset.idx].penguji = inp.value.trim();
   });
+  document.querySelectorAll('.nosertif-input').forEach(inp => {
+    students[inp.dataset.idx].nosertif = inp.value.trim();
+  });
 
-  const toFill = students.filter(s => s.nilai || s.penguji);
+  const toFill = students.filter(s => s.nilai || s.penguji || s.nosertif);
   if (toFill.length === 0) {
-    showStatus('❌ Belum ada nilai atau penguji yang diisi.', 'error');
+    showStatus('❌ Belum ada nilai, penguji, atau no sertifikat yang diisi.', 'error');
     return;
   }
 
@@ -338,7 +363,7 @@ document.getElementById('btnIsiForm').addEventListener('click', async () => {
 document.getElementById('btnReset').addEventListener('click', async () => {
   if (!confirm('Reset tabel di plugin dan form di halaman?')) return;
 
-  students.forEach(s => { s.nilai = ''; s.penguji = ''; });
+  students.forEach(s => { s.nilai = ''; s.penguji = ''; s.nosertif = ''; });
   renderTable();
 
   const tab = await getActiveTab();

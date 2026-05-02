@@ -6,7 +6,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      width: 680px;
+      width: 760px;
       font-family: 'Segoe UI', Arial, sans-serif;
       font-size: 12px;
       background: #f0f2f5;
@@ -104,11 +104,12 @@
       font-size: 11px;
       white-space: nowrap;
     }
-    thead th.col-no      { width: 32px; text-align: center; }
-    thead th.col-nisn    { width: 100px; }
-    thead th.col-nama    { }
-    thead th.col-nilai   { width: 75px; }
-    thead th.col-penguji { width: 190px; }
+    thead th.col-no        { width: 30px; text-align: center; }
+    thead th.col-nisn      { width: 90px; }
+    thead th.col-nama      { }
+    thead th.col-nilai     { width: 65px; }
+    thead th.col-penguji   { width: 160px; }
+    thead th.col-nosertif  { width: 140px; }
 
     tbody tr:nth-child(even) { background: #fafafa; }
     tbody tr:hover { background: #e3f2fd; }
@@ -189,17 +190,19 @@
         <th class="col-nama">Nama Siswa</th>
         <th class="col-nilai">Nilai</th>
         <th class="col-penguji">Penguji Internal</th>
+        <th class="col-nosertif">No Sertifikat</th>
       </tr>
     </thead>
     <tbody id="tableBody">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <div id="emptyState">
             <div style="font-size:36px">📋</div>
             <p>Buka halaman <b>input_nilai_ukk</b>, lalu klik <b>⚡ Generate Siswa</b></p>
           </div>
         </td>
       </tr>
+      <!-- colspan updated in JS when rendering -->
     </tbody>
   </table>
 </div>
